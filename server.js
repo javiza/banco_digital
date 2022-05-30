@@ -8,6 +8,12 @@ const exphbs = require('express-handlebars');
 const puerto = process.env.PUERTOS || 3000; 
 const servidor = process.env.HOSTORG || "localhost"; 
 app.listen(puerto, () => console.log(`Servidor Disponible >>> http://${servidor}:${puerto} <<`));
+
+
+//usar expres de url y express de json para poder tomar el dato de parte del usuario
+app.use(express.urlencoded({ extended: false }))
+//json
+app.use(express.json());
 //disponibilizar public
 
 
@@ -47,8 +53,12 @@ app.post('/login', (req, res) => {
     res.redirect('/dashboard');
 })
 app.post('/register', (req, res) => {
-    res.redirect('/dashboard');
+    const user_data = req.body;
+    console.log(user_data)
 })
 app.get('/dashboard', (_req, res) => {
     res.render('dashboard');
+});
+app.get('/logout', (_req, res) => {
+    res.redirect('/');
 });
