@@ -8,13 +8,15 @@ const exphbs = require('express-handlebars');
 const puerto = process.env.PUERTOS || 3000; 
 const servidor = process.env.HOSTORG || "localhost"; 
 app.listen(puerto, () => console.log(`Servidor Disponible >>> http://${servidor}:${puerto} <<`));
+//disponibilizar public
+
 
 //disponibilizar bootstrap para que el front sepa que este disponible
-app.use("/bootstrap", express.static("node_modules/bootstrap"));
+app.use("/bootstrap", express.static("/node_modules/bootstrap/dist"));
 
 //disponibilizar public y su contenido
-app.use("/js", express.static(__dirname + "public/js"));//disponiblizando las carpetas de public y su contenido
-app.use("/css", express.static(__dirname + "public/css"));//disponiblizando las carpetas de public y su contenido
+app.use("/js", express.static(__dirname + "/public/js"));//disponiblizando las carpetas de public y su contenido js
+app.use("/css", express.static(__dirname + "/public/css"));//disponiblizando las carpetas de public y su contenido css
 
 //configurar motor de vistas, dejandolo como handlebars
 app.set("view engine", "handlebars");
@@ -28,9 +30,16 @@ app.engine(
     })
 );
 //renderizar raiz
-app.get("/", (req, res) => {
-    res.render("login");
+app.get("/", (_req, res) => {
+    try {
+        res.render("Login");
+    } catch (e) {
+        res.status(500).send({
+            error: `Algoo salió mal... ${e}`,
+            code: 500
+        })
+    };
 });
-app.get('/register', (req, res) => {
+app.get('/register', (_req, res) => {
     res.render('register');
 });
