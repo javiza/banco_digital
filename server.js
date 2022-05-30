@@ -32,7 +32,7 @@ app.engine(
 //renderizar raiz
 app.get("/", (_req, res) => {
     try {
-        res.render("Login");
+        res.render("login");
     } catch (e) {
         res.status(500).send({
             error: `Algoo salió mal... ${e}`,
@@ -42,4 +42,13 @@ app.get("/", (_req, res) => {
 });
 app.get('/register', (_req, res) => {
     res.render('register');
+});
+app.post('/login', (req, res) => {
+    res.redirect('/dashboard');
+})
+app.post('/register', (req, res) => {
+    res.redirect('/dashboard');
+})
+app.get('/dashboard', (_req, res) => {
+    res.render('dashboard');
 });
