@@ -10,19 +10,14 @@
     <h3>$ {{saldo}}</h3>
   </div>
   <form action='/transfer' method='post'>
-    <input
-      type='hidden'
-      name='id_cliente'
-      id='id_cliente'
-      value='{{current_user.id}}'
-    />
+    <input type='hidden' name='id_cliente' id='id_cliente' value='{{current_user.id}}' />
     <div class='input-group mb-3'>
       <span class='input-group-text' id='basic-addon1'>
         >
       </span>
       <select class='form-control' name='id_destinatario' id='id_destinatario'>
         {{#each users}}
-          <option value={{this.id}}>{{this.name}}</option>
+        <option value={{this.id}}>{{this.name}}</option>
         {{/each}}
       </select>
     </div>
@@ -30,23 +25,14 @@
       <span class='input-group-text' id='basic-addon1'>
         $
       </span>
-      <input
-        type='text'
-        class='form-control'
-        aria-label='monto'
-        aria-describedby='basic-addon1'
-        name='monto'
-        id='monto'
-      />
+      <input type='text' class='form-control' aria-label='monto' aria-describedby='basic-addon1' name='monto'
+        id='monto' />
     </div>
     <div class='mb-3' style='text-align: left !important;'>
       <label>Comentario:</label><br />
       <textarea class='form-control' name='comment' id='comment'></textarea>
     </div>
-    <button
-      type='submit'
-      class='btn btn-primary margin-auto shadow px-5'
-    >Transferir</button>
+    <button type='submit' class='btn btn-primary margin-auto shadow px-5'>Transferir</button>
   </form>
 
   <hr />
@@ -62,12 +48,12 @@
     </thead>
     <tbody>
       {{#each transfers}}
-        <tr>
-          <th scope='row'>{{this.fecha}}</th>
-          <td>{{this.origen}}</td>
-          <td>{{this.destino}}</td>
-          <td>${{this.monto}}</td>
-        </tr>
+      <tr>
+        <th scope='row'>{{this.fecha}}</th>
+        <td>{{this.origen}}</td>
+        <td>{{this.destino}}</td>
+        <td>${{this.monto}}</td>
+      </tr>
       {{/each}}
     </tbody>
   </table>
