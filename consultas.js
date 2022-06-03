@@ -25,7 +25,7 @@ async function login(user_data) {
         values: Object.values(user_data)
     };
     try {
-        const resp = await pool.query(sql);
+        const resp = await pool.query(consultas);
         return resp;
         
     } catch (error) {

@@ -2,8 +2,12 @@
 const express = require('express');
 const app = express();
 const exphbs = require('express-handlebars');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
+const secret = '123';
 //traer modulos
 const {register_user,login} = require('./consultas.js');                                      
+
 
 //levantar servidor
 const puerto = process.env.PUERTOS || 3000; 
@@ -55,12 +59,14 @@ app.post('/login', async (req, res) => {
   
     try {
       let resp = await login(user_data);
+     
       if (resp.rowCount == 0) {
         res.redirect('/');
       } else {
         const current_user = resp.rows[0];
         const token = jwt.sign(current_user, secret);
-        res.cookie('token', token);
+        
+        res.cookie('token', token);//utilizamos los cookies para poder almacenar el token // tambien se usa localStorage
         res.redirect('/dashboard');
       }
     } catch (error) {
