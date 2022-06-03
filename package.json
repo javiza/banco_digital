@@ -1,0 +1,30 @@
+{
+  "name": "banco_digit",
+  "version": "1.0.0",
+  "description": "gestion de datos de un banco, usando Express, postgreSql, handlebars parciales, jsonWebtoken, bootstrap, fileupload",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/javiza/banco_digital.git"
+  },
+  "author": "jonathan Bustos Ramos",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/javiza/banco_digital/issues"
+  },
+  "homepage": "https://github.com/javiza/banco_digital#readme",
+  "dependencies": {
+    "bootstrap": "^5.1.3",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.18.1",
+    "express-fileupload": "^1.4.0",
+    "express-handlebars": "^6.0.6",
+    "jsonwebtoken": "^8.5.1",
+    "nodemon": "^2.0.16",
+    "pg": "^8.7.3"
+  }
+}
