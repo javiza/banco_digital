@@ -6,13 +6,13 @@ async function checkRut(rut) {
   let dv = rut.substring(rut.length - 1).toUpperCase();
   let numeros = cuerpo.replace(/\D/g, '');
   let numeroArr = validarRut(numeros);
-  console.log(numeroArr[0])
+
   console.log("Rut:",rut,", cuerpo: ", cuerpo, ", digito verificador: ", dv, ", numeros limpios: ", numeros, "numeros en array: ",numeroArr)
 
   if(dv == "k" || dv == "K" ){
    dv = 10;
   }
-  if(dv == 0 ){
+  if(dv == "0" ){
     dv = 11;
   }
   if(dv == numeroArr){

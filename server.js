@@ -8,9 +8,11 @@ const secret = '123';
 //traer modulos
 const {
   register_user,
-  login,getAllTransfers,getAllUsers,newTransfer
+  login,getAllTransfers,getAllUsers,newTransfer,getDatoUsers
 } = require('./consultas.js');
-
+const {
+  checkRut,
+} = require('./script.js')
 
 //levantar servidor
 const puerto = process.env.PUERTOS || 3000;
@@ -62,7 +64,9 @@ app.get("/", (req, res) => {
     res.render('login');
   }
 });
-
+app.get('/loginAdmin', async (req,res) => {
+  res.render('loginAdmin');
+})
 app.get('/register', (req, res) => {
   res.render('register');
 });
@@ -95,13 +99,16 @@ app.post('/login', async (req, res) => {
 app.post('/register', async (req, res) => {
   const user_data = req.body;
 
+  
   try {
+    await checkRut(user_data.rut)
+   
     await register_user(user_data);
     res.redirect('/dashboard');
   } catch (error) {
     res.status(500).send({
       code: 500,
-      message: 'No se pudo crear Usuario',
+      message: error.message,
     });
   }
 })
@@ -143,6 +150,27 @@ app.post('/transfer', async (req, res) => {
     });
   }
 });
+app.get('/admin', async (req, res) => {
+  const {
+    token
+  } = req.cookies;
+
+  const allUsers = await get(getDatoUsers);
+  if (token) {
+    jwt.verify(token, secret, (err, decoded) => {
+      
+      if (err) {
+        res.redirect('/');
+      } else {
+        res.render('admin', {
+          current_user: decoded, allUsers,
+        });
+      }
+    });
+  } else {
+    res.redirect('/');
+  }
+})
 
 // logout(salida)
 app.get('/logout', (req, res) => {

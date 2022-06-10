@@ -4,7 +4,7 @@ const pool = new pg.Pool({
   password: '1234',
   host: 'localhost',
   port: 5432,
-  database: 'banco_bit',
+  database: 'banco_bitcoin',
 });
 async function register_user(user_data) {
   const consultas = {
@@ -53,6 +53,17 @@ async function getAllUsers() {
     console.log(error.message);
   }
 }
+async function getDatoUsers(){
+  const consultas = {
+    text: 'SELECT id, name, email, rut, address, balance',
+  };
+  try {
+    const resp = await pool.query(consultas);
+    return resp.rows;
+  } catch (error) {
+    console.log(error.message)
+  }
+}
 
 async function newTransfer(data_transfer) {
   const consultas = {
@@ -88,5 +99,5 @@ async function newTransfer(data_transfer) {
 //exportar modulos
 module.exports = {
   register_user,
-  login,getAllTransfers,getAllUsers,newTransfer
+  login,getAllTransfers,getAllUsers,newTransfer,getDatoUsers,
 }
