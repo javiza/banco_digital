@@ -16,9 +16,9 @@ async function checkRut(rut) {
     dv = 11;
   }
   if(dv == numeroArr){
-    console.log("rut valido");
+    return true;
   }else{
-    console.log("Rut invalido reingresa el rut");
+    return false;
   }
 
 

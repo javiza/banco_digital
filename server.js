@@ -149,10 +149,18 @@ app.post('/register', async (req, res) => {
 
 
   try {
-    await checkRut(user_data.rut)
-
-    await register_user(user_data);
-    res.redirect('/dashboard');
+    let checkRutUsr = await checkRut(user_data.rut)
+    if(checkRutUsr === true) {
+      console.log(user_data)
+      await register_user(user_data)
+      res.render('dashboard');
+    }else {
+      console.log('error de Rut');
+      res.redirect('/register');
+      
+    }
+    
+    
   } catch (error) {
     res.status(500).send({
       code: 500,
@@ -208,6 +216,7 @@ app.get('/admin', async (req, res) => {
   } = req.cookies;
 
   const allUsers = await getDatoUsers();
+ 
   if (token) {
     jwt.verify(token, secret, (err, decoded) => {
 
