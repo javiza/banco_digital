@@ -16,3 +16,6 @@ create table transfer (
     fecha timestamp default current_timestamp,
     comment varchar(50)
     );
+
+INSERT INTO admin(name,rut,password)
+ VALUES('jonathan','1234567-8','1234');
