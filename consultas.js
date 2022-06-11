@@ -31,6 +31,20 @@ async function login(user_data) {
     console.log(error.message);
   }
 }
+
+async function admin(user_data) {
+  const consultas = {
+    text: 'SELECT * FROM admin WHERE rut = $1 and password = $2',
+    values: Object.values(user_data)
+  };
+  try {
+    const resp = await pool.query(consultas);
+    return resp;
+
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 async function getAllTransfers() {
   const consultas = {
     text: 'SELECT t.fecha, c.name as origen, d.name as destino, t.monto FROM transfer t left join cliente c on t.id_cliente = c.id left join cliente d on t.id_destinatario = d.id',
@@ -55,7 +69,7 @@ async function getAllUsers() {
 }
 async function getDatoUsers(){
   const consultas = {
-    text: 'SELECT id, name, email, rut, address, balance',
+    text: 'SELECT id, name, email, rut, address, balance FROM cliente',
   };
   try {
     const resp = await pool.query(consultas);
@@ -99,5 +113,5 @@ async function newTransfer(data_transfer) {
 //exportar modulos
 module.exports = {
   register_user,
-  login,getAllTransfers,getAllUsers,newTransfer,getDatoUsers,
+  login,getAllTransfers,getAllUsers,newTransfer,getDatoUsers,admin,
 }

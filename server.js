@@ -8,7 +8,12 @@ const secret = '123';
 //traer modulos
 const {
   register_user,
-  login,getAllTransfers,getAllUsers,newTransfer,getDatoUsers
+  login,
+  getAllTransfers,
+  getAllUsers,
+  newTransfer,
+  getDatoUsers,
+  admin
 } = require('./consultas.js');
 const {
   checkRut,
@@ -51,7 +56,9 @@ app.engine(
 );
 //renderizar raiz
 app.get("/", (req, res) => {
-  const { token } = req.cookies;
+  const {
+    token
+  } = req.cookies;
   if (token) {
     jwt.verify(token, secret, (err, decoded) => {
       if (err) {
@@ -63,12 +70,6 @@ app.get("/", (req, res) => {
   } else {
     res.render('login');
   }
-});
-app.get('/loginAdmin', async (req,res) => {
-  res.render('loginAdmin');
-})
-app.get('/register', (req, res) => {
-  res.render('register');
 });
 // login verificando con jwt 
 app.post('/login', async (req, res) => {
@@ -84,8 +85,8 @@ app.post('/login', async (req, res) => {
       const token = jwt.sign(current_user, secret);
 
       res.cookie('token', token); //utilizamos los cookies para setear el token 
-      // tambien se usa localStorage pero no es recomendable porque estamos en el back,
-      // localStorage se usa en el front
+      //tambien se usa localStorage pero no es recomendable porque estamos en el back,
+      //       // localStorage se usa en el front
       res.redirect('/dashboard');
     }
   } catch (error) {
@@ -95,14 +96,61 @@ app.post('/login', async (req, res) => {
     });
   }
 });
+//loginAdmin render
+app.get("/loginAdmin", async (req, res) => {
+  const {
+    token
+  } = req.cookies;
+  if (token) {
+    jwt.verify(token, secret, (err, decoded) => {
+      if (err) {
+        res.render('loginadmin');
+      } else {
+        res.redirect('/admin');
+      }
+    });
+  } else {
+    res.render('loginadmin');
+  }
+});
+//
+app.post('/loginAdmin', async (req, res) => {
+  const user_data = req.body;
+
+  try {
+    let resp = await admin(user_data);
+
+    if (resp.rowCount == 0) {
+      res.redirect('/loginAdmin');
+    } else {
+      const current_user = resp.rows[0];
+      const token = jwt.sign(current_user, secret);
+
+      res.cookie('token', token); //utilizamos los cookies para setear el token 
+      //tambien se usa localStorage pero no es recomendable porque estamos en el back,
+      //       // localStorage se usa en el front
+      res.redirect('/admin');
+    }
+  } catch (error) {
+    res.status(402).send({
+      code: 402,
+      message: error.message,
+    });
+  }
+});
+//
+app.get('/register', (req, res) => {
+  res.render('register');
+});
+
 // registrar nuevo usuario
 app.post('/register', async (req, res) => {
   const user_data = req.body;
 
-  
+
   try {
     await checkRut(user_data.rut)
-   
+
     await register_user(user_data);
     res.redirect('/dashboard');
   } catch (error) {
@@ -112,6 +160,7 @@ app.post('/register', async (req, res) => {
     });
   }
 })
+//dashboard para clientes
 app.get('/dashboard', async (req, res) => {
   const {
     token
@@ -119,6 +168,7 @@ app.get('/dashboard', async (req, res) => {
   let users = await getAllUsers();
   let saldo = 0;
   const transfers = await getAllTransfers();
+
   if (token) {
     jwt.verify(token, secret, (err, decoded) => {
       saldo = users.find((user) => user.id == decoded.id).balance;
@@ -138,6 +188,7 @@ app.get('/dashboard', async (req, res) => {
     res.redirect('/');
   }
 });
+//transferencia
 app.post('/transfer', async (req, res) => {
   const data_transfer = req.body;
   try {
@@ -150,25 +201,27 @@ app.post('/transfer', async (req, res) => {
     });
   }
 });
+//renderizar admin persistiendo token
 app.get('/admin', async (req, res) => {
   const {
     token
   } = req.cookies;
 
-  const allUsers = await get(getDatoUsers);
+  const allUsers = await getDatoUsers();
   if (token) {
     jwt.verify(token, secret, (err, decoded) => {
-      
+
       if (err) {
-        res.redirect('/');
+        res.redirect('/loginAdmin');
       } else {
         res.render('admin', {
-          current_user: decoded, allUsers,
+          current_user: decoded,
+          allUsers,
         });
       }
     });
   } else {
-    res.redirect('/');
+    res.redirect('/loginAdmin');
   }
 })
 
