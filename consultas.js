@@ -75,7 +75,7 @@ async function getDatoUsers(){
     const resp = await pool.query(consultas);
     return resp.rows;
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
   }
 }
 
@@ -109,9 +109,22 @@ async function newTransfer(data_transfer) {
     console.log(error.message);
   }
 }
+//eliminar cliente
+async function borrar(id) {
+ consultas = {
+  text: `DELETE FROM skaters WHERE id = ${id} RETURNING *`,
+ }
+ try {
+  const cliente = result.rows[0];
+  return cliente
+} catch (error) {
+  console.log(error.message);
+}
+}
+
 
 //exportar modulos
 module.exports = {
   register_user,
-  login,getAllTransfers,getAllUsers,newTransfer,getDatoUsers,admin,
+  login,getAllTransfers,getAllUsers,newTransfer,getDatoUsers,admin,borrar,
 }

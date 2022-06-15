@@ -10,7 +10,8 @@
           </a>
     </div>
 </div>
-<form action="/admin">
+
+
   <div class="col">
     <table class='table table-striped table-hover'>
       <thead>
@@ -24,10 +25,13 @@
 
         </tr>
       </thead>
-      <tbody>
+   
+    
         {{#each allUsers}}
+           <tbody>
+        <form method="delete" action="/delete/{{id}}">
         <tr>
-          <th scope='row'>{{this.id}}
+          <th scope='row' id="id">{{this.id}}</th>
             <div>
 
             </div>
@@ -36,108 +40,14 @@
           <td>${{this.rut}}</td>
           <td>${{this.address}}</td>
           <td>${{this.balance}}</td>
-          <td><button class="btn btn-warning">Editar</button></td>
-          <td><button class="btn btn-danger">Eliminar</button></td>
+             
+       
+          <td><button type="submit" class="btn btn-danger"  id="DELETE" >Eliminar</button></td>
         </tr>
-        {{/each}}
-      </tbody>
+      
+        </form>
+      </tbody>  {{/each}}
     </table>
   </div>
-</form>
+
 </div>
-<div id="ListaCursos">
-      <hr />
-      <hr />
-      <h2>Tabla de Cursos</h2>
-
-      <div class="container pt-5 w-75">
-        <table class="table">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col">id</th>
-              <th scope="col">Nombre</th>
-              <th scope="col">Email</th>
-              <th scope="col">Rut</th>
-              <th scope="col">Dirección</th>
-              <th scope="col">Saldo</th>
-              <th scope="col">-</th>
-            </tr>
-          </thead>
-          <tbody id="cuerpo"></tbody>
-        </table>
-      </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  </body>
-</html>
-
-<style>
-  body {
-    text-align: center;
-  }
-</style>
-
-<script>
- 
-      allUsers.forEach((c, i) => {
-        tbody.innerHTML += `
-        <tr>
-          <td>${i + 1}</td>
-          <td>${c.id}</td>
-          <td>${c.name}</td>
-          <td>${c.email}</td>
-          <td>${c.rut}</td>
-          <td>${c.address}</td>
-          <td>${c.balance}</td>
-         
-          <td>
-            <button class="btn btn-warning" onclick="prepararCurso(${i},'${
-          c.id
-        }')">Editar</button>
-            <button class="btn btn-danger" onclick="eliminarCurso(${i},'${
-          c.id
-        }')">Eliminar</button>
-          </td>
-        </tr>
-      `;
-      });
-   
-  
-
-  
-
-  function eliminarCurso(i, nombre) {
-    axios.delete("/admin" + nombre).then(() => {
-      alert("Curso " + nombre + " eliminado");
-      getData(allUsers);
-    });
-  }
-
-  function prepararCurso(i, id) {
-    console.log(cursos);
-    nombre.value = cursos[i].nombre;
-    nivelTecnico.value = cursos[i].nivel;
-    fechaInicio.value = cursos[i].fecha;
-    duracion.value = cursos[i].duracion;
-    document
-      .getElementById("editar")
-      .setAttribute("onclick", `editarCurso('${id}')`);
-    document.getElementById("agregar").style.display = "none";
-    document.getElementById("editar").style.display = "block";
-  }
-  function editarCurso(id) {
-    axios
-      .put(url, {
-        id: id,
-        nombre: nombre.value,
-        nivelTecnico: nivelTecnico.value,
-        fechaInicio: fechaInicio.value,
-        duracion: duracion.value,
-      })
-      .then(() => {
-        getData();
-        document.getElementById("agregar").style.display = "block";
-        document.getElementById("editar").style.display = "none";
-      });
-  }
-</script>

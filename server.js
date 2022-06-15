@@ -3,6 +3,8 @@ const express = require('express');
 const app = express();
 const exphbs = require('express-handlebars');
 const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+
 const jwt = require('jsonwebtoken');
 const secret = '123';
 //traer modulos
@@ -13,7 +15,7 @@ const {
   getAllUsers,
   newTransfer,
   getDatoUsers,
-  admin
+  admin,borrar
 } = require('./consultas.js');
 const {
   checkRut,
@@ -34,7 +36,8 @@ app.use(express.json());
 // cookie parser
 app.use(cookieParser());
 //disponibilizar public
-
+//body parser
+app.use(bodyParser.json());
 
 //disponibilizar bootstrap para que el front sepa que este disponible
 app.use("/bootstrap", express.static("/node_modules/bootstrap/dist"));
@@ -151,16 +154,15 @@ app.post('/register', async (req, res) => {
   try {
     let checkRutUsr = await checkRut(user_data.rut)
     if(checkRutUsr === true) {
-      console.log(user_data)
+    
       await register_user(user_data)
-      res.render('dashboard');
+      res.redirect('/dashboard')
     }else {
-      console.log('error de Rut');
-      res.redirect('/register');
-      
+      alert('rut invalido');
+      console.log('rut invalido')
+     res.redirect('/register')     
     }
-    
-    
+
   } catch (error) {
     res.status(500).send({
       code: 500,
@@ -202,10 +204,10 @@ app.post('/transfer', async (req, res) => {
   try {
     await newTransfer(data_transfer);
     res.redirect('/dashboard');
-  } catch (error) {
+  } catch (e) {
     res.status(500).send({
-      code: 500,
-      message: error.message,
+        error: `Algo salió mal... ${e}`,
+        code: 500
     });
   }
 });
@@ -233,6 +235,27 @@ app.get('/admin', async (req, res) => {
     res.redirect('/loginAdmin');
   }
 })
+//eliminar cliente
+app.delete("/delete/:id", async (req, res) =>  {
+  
+  const { id } = req.params
+
+  console.log(id)
+ 
+  try {
+   //aca el nombre que desea eliminar el cliente
+
+     await borrar(id);
+    res.status(200).send();
+  
+  } catch (e) {
+      res.status(500).send({
+          error: `Algo salió mal... ${e}`,
+          code: 500
+      })
+  };
+});
+
 
 // logout(salida)
 app.get('/logout', (req, res) => {
