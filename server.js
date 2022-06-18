@@ -236,7 +236,7 @@ app.get('/admin', async (req, res) => {
   }
 })
 //eliminar cliente
-app.delete("/delete/:id", async (req, res) =>  {
+app.delete("/admin/:id", async (req, res) =>  {
   
   const { id } = req.params
 
