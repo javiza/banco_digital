@@ -110,19 +110,16 @@ async function newTransfer(data_transfer) {
   }
 }
 //eliminar cliente
+
+
 async function borrar(id) {
- consultas = {
-  text: `DELETE FROM skaters WHERE id = ${id} RETURNING *`,
- }
- try {
-  const cliente = result.rows[0];
-  return cliente
-} catch (error) {
-  console.log(error.message);
+  try {
+      const result = await pool.query(`DELETE FROM cliente WHERE id ='${id}'`);
+      return result.rowCount;
+  } catch (error) {
+    console.log(error.message);
+  }
 }
-}
-
-
 //exportar modulos
 module.exports = {
   register_user,

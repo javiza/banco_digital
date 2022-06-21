@@ -156,7 +156,7 @@ app.post('/register', async (req, res) => {
     if(checkRutUsr === true) {
     
       await register_user(user_data)
-      res.redirect('/dashboard')
+      res.redirect('/dashboard')  
     }else {
       alert('rut invalido');
       console.log('rut invalido')
@@ -164,6 +164,7 @@ app.post('/register', async (req, res) => {
     }
 
   } catch (error) {
+    
     res.status(500).send({
       code: 500,
       message: error.message,
@@ -237,17 +238,13 @@ app.get('/admin', async (req, res) => {
 })
 //eliminar cliente
 app.delete("/admin/:id", async (req, res) =>  {
-  
   const { id } = req.params
-
   console.log(id)
- 
   try {
-   //aca el nombre que desea eliminar el cliente
-
      await borrar(id);
-    res.status(200).send();
-  
+   
+     res.status(200).send();
+     
   } catch (e) {
       res.status(500).send({
           error: `Algo salió mal... ${e}`,
@@ -258,7 +255,7 @@ app.delete("/admin/:id", async (req, res) =>  {
 
 
 // logout(salida)
-app.get('/logout', (req, res) => {
+app.get('/logout', (_req, res) => {
   res.clearCookie('token'); //se limpia el token al salir
   res.redirect('/');
 });

@@ -1,28 +1,26 @@
-
-
+//validacion rut
 
 async function checkRut(rut) {
-  let cuerpo = rut.substring(0, rut.length -1);
+  let cuerpo = rut.substring(0, rut.length - 1);
   let dv = rut.substring(rut.length - 1).toUpperCase();
   let numeros = cuerpo.replace(/\D/g, '');
   let numeroArr = validarRut(numeros);
 
-  console.log("Rut:",rut,", cuerpo: ", cuerpo, ", digito verificador: ", dv, ", numeros limpios: ", numeros, "numeros en array: ",numeroArr)
+  console.log("Rut:", rut, ", cuerpo: ", cuerpo, ", digito verificador: ", dv, ", numeros limpios: ", numeros, "numeros en array: ", numeroArr)
 
-  if(dv == "k" || dv == "K" ){
-   dv = 10;
+  if (dv == "k" || dv == "K") {
+    dv = 10;
   }
-  if(dv == "0" ){
+  if (dv == "0") {
     dv = 11;
   }
-  if(dv == numeroArr){
+  if (dv == numeroArr) {
     return true;
-  }else{
+  } else {
     return false;
   }
-
-
 }
+
 function validarRut(numeros) {
   let numerosArray = numeros.split('').reverse()
   let multiplicador = 2;
