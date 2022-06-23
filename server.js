@@ -43,8 +43,8 @@ app.use(bodyParser.json());
 app.use("/bootstrap", express.static("/node_modules/bootstrap/dist"));
 
 //disponibilizar public y su contenido
-app.use("/js", express.static(__dirname + "/public/js")); //disponiblizando las carpetas de public y su contenido js
-app.use("/css", express.static(__dirname + "/public/css")); //disponiblizando las carpetas de public y su contenido css
+app.use("/js", express.static(__dirname + "/public/js")); 
+app.use("/css", express.static(__dirname + "/public/css")); 
 
 //configurar motor de vistas, dejandolo como handlebars
 app.set("view engine", "handlebars");
@@ -53,8 +53,8 @@ app.engine(
   "handlebars",
   exphbs.engine({
     defaultLayout: "main",
-    layoutsDir: `${__dirname}/views/layout`, //directorio de los layouts
-    partialsDir: `${__dirname}/views/partial`, //directorio de los parciales
+    layoutsDir: `${__dirname}/views/layout`,
+    partialsDir: `${__dirname}/views/partial`, 
   })
 );
 //renderizar raiz
@@ -80,16 +80,14 @@ app.post('/login', async (req, res) => {
 
   try {
     let resp = await login(user_data);
-
+    console.log(resp)
     if (resp.rowCount == 0) {
       res.redirect('/');
     } else {
       const current_user = resp.rows[0];
       const token = jwt.sign(current_user, secret);
 
-      res.cookie('token', token); //utilizamos los cookies para setear el token 
-      //tambien se usa localStorage pero no es recomendable porque estamos en el back,
-      //       // localStorage se usa en el front
+      res.cookie('token', token); 
       res.redirect('/dashboard');
     }
   } catch (error) {
@@ -141,36 +139,6 @@ app.post('/loginAdmin', async (req, res) => {
     });
   }
 });
-//
-app.get('/register', (req, res) => {
-  res.render('register');
-});
-
-// registrar nuevo usuario
-app.post('/register', async (req, res) => {
-  const user_data = req.body;
-
-
-  try {
-    let checkRutUsr = await checkRut(user_data.rut)
-    if(checkRutUsr === true) {
-    
-      await register_user(user_data)
-      res.redirect('/dashboard')  
-    }else {
-      alert('rut invalido');
-      console.log('rut invalido')
-     res.redirect('/register')     
-    }
-
-  } catch (error) {
-    
-    res.status(500).send({
-      code: 500,
-      message: error.message,
-    });
-  }
-})
 //dashboard para clientes
 app.get('/dashboard', async (req, res) => {
   const {
@@ -195,10 +163,53 @@ app.get('/dashboard', async (req, res) => {
         });
       }
     });
-  } else {
-    res.redirect('/');
+  }else {
+  res.redirect('/');
   }
 });
+//
+app.get('/register', (req, res) => {
+  res.render('register');
+});
+
+// registrar nuevo usuario
+app.post('/register', async (req, res) => {
+  const user_data = req.body;
+  try {
+    const { rut} = req.body;
+    let checkRutUser = await checkRut(rut);
+    console.log(checkRutUser)
+if (checkRutUser == true) {
+  await register_user(user_data);
+  delete user_data.name && delete user_data.email && delete user_data.address
+  let resp = await login(user_data);
+
+      if (resp.rowCount == 0) {
+        res.redirect('/register');
+      } else {
+        const current_user = resp.rows[0];
+        const token = jwt.sign(current_user, secret);
+  
+        res.cookie('token', token); 
+
+        res.redirect('/dashboard');
+      }
+}else {
+  console.log(`Rut: ${rut} invalido ingresar nuevamente`)
+  res.status(500).send({
+    code: 500,
+    message: `Rut: ${rut} invalido ingresar nuevamente`,
+  });
+}
+      
+  } catch (error) {
+    res.status(500).send({
+      code: 500,
+      message: error.message,
+    });
+  }
+})
+
 //transferencia
 app.post('/transfer', async (req, res) => {
   const data_transfer = req.body;
@@ -238,21 +249,18 @@ app.get('/admin', async (req, res) => {
 })
 //eliminar cliente
 app.delete("/admin/:id", async (req, res) =>  {
-  const { id } = req.params
-  console.log(id)
+  const { id } = req.params;
   try {
-     await borrar(id);
-   
-     res.status(200).send();
-     
-  } catch (e) {
-      res.status(500).send({
-          error: `Algo salió mal... ${e}`,
-          code: 500
-      })
-  };
+    await borrar(id);
+    res.redirect('/admin')
+    
+ } catch (error) {
+  res.status(500).send({
+    code: 500,
+    message: 'Error al eliminar usuario',
+  });
+}
 });
-
 
 // logout(salida)
 app.get('/logout', (_req, res) => {

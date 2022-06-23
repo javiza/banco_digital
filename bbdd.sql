@@ -1,10 +1,10 @@
-create database banco_bit;
+create database gestion;
 create table cliente (
     id serial primary key,
     name varchar(50),
-    email varchar(50) unique not null,
-    rut varchar(9) unique not null,
-    password varchar(50),
+    email varchar(50) not null,
+    rut varchar(12) not null,
+    password varchar(10),
     address varchar(50),
     balance int check(balance >= 0) default 100000);
 
@@ -16,6 +16,6 @@ create table transfer (
     fecha timestamp default current_timestamp,
     comment varchar(50)
     );
-
+create table admin(name varchar(50),rut varchar(12) not null,password varchar(10));
 INSERT INTO admin(name,rut,password)
- VALUES('jonathan','1234567-8','1234');
+ VALUES('jonathan','12.345.567-8','1234');

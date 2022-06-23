@@ -4,7 +4,7 @@ const pool = new pg.Pool({
   password: '1234',
   host: 'localhost',
   port: 5432,
-  database: 'banco_bitcoin',
+  database: 'gestion',
 });
 async function register_user(user_data) {
   const consultas = {

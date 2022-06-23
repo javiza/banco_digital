@@ -6,8 +6,6 @@ async function checkRut(rut) {
   let numeros = cuerpo.replace(/\D/g, '');
   let numeroArr = validarRut(numeros);
 
-  console.log("Rut:", rut, ", cuerpo: ", cuerpo, ", digito verificador: ", dv, ", numeros limpios: ", numeros, "numeros en array: ", numeroArr)
-
   if (dv == "k" || dv == "K") {
     dv = 10;
   }
