@@ -4,7 +4,6 @@ const app = express();
 const exphbs = require('express-handlebars');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-
 const jwt = require('jsonwebtoken');
 const secret = '123';
 //traer modulos
@@ -15,7 +14,8 @@ const {
   getAllUsers,
   newTransfer,
   getDatoUsers,
-  admin,borrar
+  admin,
+  borrar
 } = require('./consultas.js');
 const {
   checkRut,
@@ -43,8 +43,8 @@ app.use(bodyParser.json());
 app.use("/bootstrap", express.static("/node_modules/bootstrap/dist"));
 
 //disponibilizar public y su contenido
-app.use("/js", express.static(__dirname + "/public/js")); 
-app.use("/css", express.static(__dirname + "/public/css")); 
+app.use("/js", express.static(__dirname + "/public/js"));
+app.use("/css", express.static(__dirname + "/public/css"));
 
 //configurar motor de vistas, dejandolo como handlebars
 app.set("view engine", "handlebars");
@@ -54,7 +54,7 @@ app.engine(
   exphbs.engine({
     defaultLayout: "main",
     layoutsDir: `${__dirname}/views/layout`,
-    partialsDir: `${__dirname}/views/partial`, 
+    partialsDir: `${__dirname}/views/partial`,
   })
 );
 //renderizar raiz
@@ -87,7 +87,7 @@ app.post('/login', async (req, res) => {
       const current_user = resp.rows[0];
       const token = jwt.sign(current_user, secret);
 
-      res.cookie('token', token); 
+      res.cookie('token', token);
       res.redirect('/dashboard');
     }
   } catch (error) {
@@ -163,8 +163,8 @@ app.get('/dashboard', async (req, res) => {
         });
       }
     });
-  }else {
-  res.redirect('/');
+  } else {
+    res.redirect('/');
   }
 });
 //
@@ -176,32 +176,33 @@ app.get('/register', (req, res) => {
 app.post('/register', async (req, res) => {
   const user_data = req.body;
   try {
-    const { rut} = req.body;
+    const {
+      rut
+    } = req.body;
     let checkRutUser = await checkRut(rut);
     console.log(checkRutUser)
-if (checkRutUser == true) {
-  await register_user(user_data);
-  delete user_data.name && delete user_data.email && delete user_data.address
-  let resp = await login(user_data);
+    if (checkRutUser == true) {
+      await register_user(user_data);
+      delete user_data.name && delete user_data.email && delete user_data.address
+      let resp = await login(user_data);
 
       if (resp.rowCount == 0) {
         res.redirect('/register');
       } else {
         const current_user = resp.rows[0];
         const token = jwt.sign(current_user, secret);
-  
-        res.cookie('token', token); 
+
+        res.cookie('token', token);
 
         res.redirect('/dashboard');
       }
-}else {
-  console.log(`Rut: ${rut} invalido ingresar nuevamente`)
-  res.status(500).send({
-    code: 500,
-    message: `Rut: ${rut} invalido ingresar nuevamente`,
-  });
-}
-      
+    } else {
+      console.log(`Rut: ${rut} invalido ingresar nuevamente`)
+      res.status(500).send({
+        code: 500,
+        message: `Rut: ${rut} invalido ingresar nuevamente`,
+      });
+    }
   } catch (error) {
     res.status(500).send({
       code: 500,
@@ -218,8 +219,8 @@ app.post('/transfer', async (req, res) => {
     res.redirect('/dashboard');
   } catch (e) {
     res.status(500).send({
-        error: `Algo salió mal... ${e}`,
-        code: 500
+      error: `Algo salió mal... ${e}`,
+      code: 500
     });
   }
 });
@@ -230,7 +231,7 @@ app.get('/admin', async (req, res) => {
   } = req.cookies;
 
   const allUsers = await getDatoUsers();
- 
+
   if (token) {
     jwt.verify(token, secret, (err, decoded) => {
 
@@ -248,18 +249,20 @@ app.get('/admin', async (req, res) => {
   }
 })
 //eliminar cliente
-app.delete("/admin/:id", async (req, res) =>  {
-  const { id } = req.params;
+app.delete("/admin/:id", async (req, res) => {
+  const {
+    id
+  } = req.params;
   try {
     await borrar(id);
-    res.redirect('/admin')
-    
- } catch (error) {
-  res.status(500).send({
-    code: 500,
-    message: 'Error al eliminar usuario',
-  });
-}
+    res.redirect('/admin');
+
+  } catch (error) {
+    res.status(500).send({
+      code: 500,
+      message: 'Error al eliminar usuario',
+    });
+  }
 });
 
 // logout(salida)

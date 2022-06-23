@@ -2,8 +2,8 @@ create database gestion;
 create table cliente (
     id serial primary key,
     name varchar(50),
-    email varchar(50) not null,
-    rut varchar(12) not null,
+    email varchar(50) unique not null,
+    rut varchar(12) unique not null,
     password varchar(10),
     address varchar(50),
     balance int check(balance >= 0) default 100000);
