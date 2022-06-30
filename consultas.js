@@ -56,6 +56,19 @@ async function getAllTransfers() {
     console.log(error.message);
   }
 }
+async function getTransfer() {
+  const consultas = {
+    text: `SELECT  monto, fecha, comment FROM transfer`
+  };
+  try {
+    const resp = await pool.query(consultas);
+    return resp.rows;
+    
+  } catch (error) {
+    console.log(error.message);
+  }
+
+}
 async function getAllUsers() {
   const consultas = {
     text: 'SELECT id, name, balance FROM cliente',
@@ -67,7 +80,7 @@ async function getAllUsers() {
     console.log(error.message);
   }
 }
-async function getDatoUsers(){
+async function getDatoUsers() {
   const consultas = {
     text: 'SELECT id, name, email, rut, address, balance FROM cliente',
   };
@@ -114,8 +127,19 @@ async function newTransfer(data_transfer) {
 
 async function borrar(id) {
   try {
-      const result = await pool.query(`DELETE FROM cliente WHERE id ='${id}'`);
+    const result3 = await pool.query(`DELETE FROM transfer WHERE id_cliente ='${id}'`);
+    const result2 = await pool.query(`DELETE FROM transfer WHERE id_destinatario ='${id}'`);
+    const result = await pool.query(`DELETE FROM cliente WHERE id ='${id}'`);
+
+    if (result2) {
+      return result2.rowCount, result.rowCount;
+    }
+    if (result) {
       return result.rowCount;
+    } else {
+      return result3.rowCount, result.rowCount;
+    }
+
   } catch (error) {
     console.log(error.message);
   }
@@ -123,5 +147,5 @@ async function borrar(id) {
 //exportar modulos
 module.exports = {
   register_user,
-  login,getAllTransfers,getAllUsers,newTransfer,getDatoUsers,admin,borrar,
+  login, getAllTransfers, getTransfer,getAllUsers, newTransfer, getDatoUsers, admin, borrar,
 }

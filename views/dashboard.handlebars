@@ -1,6 +1,11 @@
-<div class="col d-grid gap-2 d-md-flex justify-content-md-end align-self-center">
-      <p>para <a href="/logout">cerrar sesión</a></p>
+ <div class="row ">
+    <div class="col pt-2">
+     
     </div>
+    <div class="col d-grid gap-2 d-md-flex justify-content-md-end align-self-center">
+     <p>para <a href="/logout">cerrar sesión</a></p>
+    </div>
+  </div>
  
 <div class="text-center row text-center mt-2">
   <div class="bg-dark text-light"><h2>
@@ -53,19 +58,19 @@
 <table class='table table-striped table-hover'>
   <thead>
     <tr>
-      <th scope='col'>Fecha</th>
-      <th scope='col'>Origen</th>
-      <th scope='col'>Destino</th>
       <th scope='col'>Monto</th>
+      <th scope='col'>Fecha</th>
+      <th scope='col'>Comentario</th>
+    
     </tr>
   </thead>
   <tbody>
-    {{#each transfers}}
+    {{#each transfer}}
     <tr>
-      <th scope='row'>{{this.fecha}}</th>
-      <td>{{this.origen}}</td>
-      <td>{{this.destino}}</td>
-      <td>${{this.monto}}</td>
+      <th scope='row'>{{this.monto}}</th>
+      <td>{{this.fecha}}</td>
+      <td>{{this.comment}}</td>
+    
     </tr>
     {{/each}}
   </tbody>

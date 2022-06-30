@@ -1,15 +1,21 @@
-
-    
-  <div class="col d-grid gap-2 d-md-flex justify-content-md-end align-self-center">
-      <p>para <a href="/logout">cerrar sesión</a></p>
+ <div class="row ">
+    <div class="col pt-2">
+     
     </div>
- 
-<div class="text-center row text-center mt-2">
-  <div class="bg-dark text-light"><h2>
-    <b>Bienvenido Administrador</b>
-  </h2>
+    <div class="col d-grid gap-2 d-md-flex justify-content-md-end align-self-center">
+     <p>para <a href="/logout">cerrar sesión</a></p>
+    </div>
+  </div>
+    
+<div class=" row text-light bg-dark ">
+
+  <div class="col text-center">
+    <h2>
+      <b>Bienvenido Administrador</b>
+    </h2>
+  </div>
+
 </div>
-<hr>
 <div>
   <hr>
 </div>
@@ -37,7 +43,7 @@
         <td>{{this.address}}</td>
         <td>${{this.balance}}</td>
 
-        <td><button type="submit" class="btn btn-danger" onclick="borrar({{id}})" value="DELETE">Eliminar</button></td>
+        <td><button type="submit" class="btn btn-light btn-outline-danger" onclick="borrar({{id}})" value="DELETE">Eliminar</button></td>
 
       </tr>
     </tbody>
@@ -45,10 +51,32 @@
 </div>
 </div>
 
+<table class='table table-striped table-hover'>
+  <div class="pt-2 text-center"><h4><b></b> Tranferencias Realizadas:</h4></div>
+
+  <thead>
+    <tr>
+      <th scope='col'>Fecha</th>
+      <th scope='col'>Origen</th>
+      <th scope='col'>Destino</th>
+      <th scope='col'>Monto</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each transfers}}
+    <tr>
+      <th scope='row'>{{this.fecha}}</th>
+      <td>{{this.origen}}</td>
+      <td>{{this.destino}}</td>
+      <td>${{this.monto}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
 <script>
   function borrar(id) {
     axios.delete("http://localhost:3000/admin/" + id).then(() => {
-      alert("Cliente id" + id + " eliminado");
+      alert("Cliente id: " + id + " Eliminado exitosamente");
 
     });
   }

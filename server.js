@@ -11,6 +11,7 @@ const {
   register_user,
   login,
   getAllTransfers,
+  getTransfer,
   getAllUsers,
   newTransfer,
   getDatoUsers,
@@ -46,6 +47,7 @@ app.use("/bootstrap", express.static("/node_modules/bootstrap/dist"));
 app.use("/js", express.static(__dirname + "/public/js"));
 app.use("/css", express.static(__dirname + "/public/css"));
 
+app.use("/img", express.static(__dirname + '/public/img'));
 //configurar motor de vistas, dejandolo como handlebars
 app.set("view engine", "handlebars");
 //configurar motor de vistas
@@ -80,7 +82,6 @@ app.post('/login', async (req, res) => {
 
   try {
     let resp = await login(user_data);
-    console.log(resp)
     if (resp.rowCount == 0) {
       res.redirect('/');
     } else {
@@ -144,9 +145,10 @@ app.get('/dashboard', async (req, res) => {
   const {
     token
   } = req.cookies;
+
   let users = await getAllUsers();
   let saldo = 0;
-  const transfers = await getAllTransfers();
+  const transfer = await getTransfer();
 
   if (token) {
     jwt.verify(token, secret, (err, decoded) => {
@@ -158,7 +160,7 @@ app.get('/dashboard', async (req, res) => {
         res.render('dashboard', {
           current_user: decoded,
           users,
-          transfers,
+          transfer,
           saldo,
         });
       }
@@ -231,7 +233,7 @@ app.get('/admin', async (req, res) => {
   } = req.cookies;
 
   const allUsers = await getDatoUsers();
-
+  const transfers = await getAllTransfers();
   if (token) {
     jwt.verify(token, secret, (err, decoded) => {
 
@@ -240,7 +242,7 @@ app.get('/admin', async (req, res) => {
       } else {
         res.render('admin', {
           current_user: decoded,
-          allUsers,
+          allUsers,transfers,
         });
       }
     });
@@ -255,7 +257,8 @@ app.delete("/admin/:id", async (req, res) => {
   } = req.params;
   try {
     await borrar(id);
-    res.redirect('/admin');
+    res.status(200).send();
+    // res.redirect('/admin');
 
   } catch (error) {
     res.status(500).send({
