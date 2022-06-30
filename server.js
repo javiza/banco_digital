@@ -169,6 +169,7 @@ app.get('/dashboard', async (req, res) => {
     res.redirect('/');
   }
 });
+
 //
 app.get('/register', (req, res) => {
   res.render('register');
@@ -249,7 +250,24 @@ app.get('/admin', async (req, res) => {
   } else {
     res.redirect('/loginAdmin');
   }
-})
+});
+// app.get("/perfil", (req, res) => {
+//   res.render("perfil");
+// });
+// app.put("/perfil", async (req, res) => {
+//   const user_data = req.body;
+//   console.log(user_data)
+//   try {
+//       await actualizarCliente(user_data);
+//       res.status(200).send("actualizados exitosamente!!");
+//   } catch (e) {
+//       res.status(500).send({
+//           error: `Algo salió mal... ${e}`,
+//           code: 500
+//       })
+//   };
+// });
+
 //eliminar cliente
 app.delete("/admin/:id", async (req, res) => {
   const {

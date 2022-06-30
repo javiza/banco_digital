@@ -69,6 +69,18 @@ async function getTransfer() {
   }
 
 }
+// async  function actualizarCliente(user_data) {
+//   const consultas = {
+//    text: `UPDATE cliente SET  name = $1, email = $2 , address = $3 , password = $4 RETURNING *`,
+//   };
+//   try {
+//     const 
+    
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// }
+
 async function getAllUsers() {
   const consultas = {
     text: 'SELECT id, name, balance FROM cliente',
