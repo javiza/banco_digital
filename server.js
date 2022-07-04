@@ -16,7 +16,7 @@ const {
   newTransfer,
   getDatoUsers,
   admin,
-  borrar
+  borrar,
 } = require('./consultas.js');
 const {
   checkRut,
@@ -251,32 +251,38 @@ app.get('/admin', async (req, res) => {
     res.redirect('/loginAdmin');
   }
 });
-// app.get("/perfil", (req, res) => {
-//   res.render("perfil");
-// });
-// app.put("/perfil", async (req, res) => {
-//   const user_data = req.body;
-//   console.log(user_data)
-//   try {
-//       await actualizarCliente(user_data);
-//       res.status(200).send("actualizados exitosamente!!");
-//   } catch (e) {
-//       res.status(500).send({
-//           error: `Algo salió mal... ${e}`,
-//           code: 500
-//       })
-//   };
-// });
+//  app.get("/perfil", (req, res) => {
+//    res.render("perfil");
+//  });
+//  app.put("/dashboard/:id", async (req, res) => {
+//   const { id } = req.params.id;
+//   console.log(id)
+//    const user_data = req.body;
+//    console.log(user_data)
+//    try {
+//        await actualizarCliente(user_data);
+//        res.status(200).send("actualizados exitosamente!!");
+//    } catch (e) {
+//        res.status(500).send({
+//            error: `Algo salió mal... ${e}`,
+//            code: 500
+//        })
+//    };
+//  });
 
 //eliminar cliente
 app.delete("/admin/:id", async (req, res) => {
   const {
     id
   } = req.params;
+  // const resp = await borrar(id);
+  // resp > 0
+  // ? res.send(`El curso de nombre ${id} fue eliminado con éxito`)
+  // : res.send("No existe un curso registrado con ese nombre");
   try {
     await borrar(id);
     res.status(200).send();
-    // res.redirect('/admin');
+    //res.redirect('/admin');
 
   } catch (error) {
     res.status(500).send({

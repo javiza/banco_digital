@@ -69,17 +69,21 @@ async function getTransfer() {
   }
 
 }
-// async  function actualizarCliente(user_data) {
-//   const consultas = {
-//    text: `UPDATE cliente SET  name = $1, email = $2 , address = $3 , password = $4 RETURNING *`,
-//   };
-//   try {
-//     const 
+//  async  function actualizarCliente(user_data) {
+//   const { name, email, rut, address, password } = user_data;
+//    const consultas = {
+//     text: `UPDATE cliente SET  name = $2, email = $3, rut= $4, address = $5 , password = $6 WHERE id= $1 *`,
+//     values: [id,name,email, rut, address,password]
+//    };
+//    try {
+//      const resp = await pool.query(consultas);
+//      return resp.rows
+
     
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// }
+//    } catch (error) {
+//      console.log(error.message);
+//    }
+//  }
 
 async function getAllUsers() {
   const consultas = {
@@ -159,5 +163,4 @@ async function borrar(id) {
 //exportar modulos
 module.exports = {
   register_user,
-  login, getAllTransfers, getTransfer,getAllUsers, newTransfer, getDatoUsers, admin, borrar,
-}
+  login, getAllTransfers, getTransfer,getAllUsers, newTransfer, getDatoUsers, admin, borrar,}
